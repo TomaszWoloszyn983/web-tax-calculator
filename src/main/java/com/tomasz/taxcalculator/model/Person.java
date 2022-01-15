@@ -2,17 +2,18 @@ package com.tomasz.taxcalculator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.util.UUID;
+
 
 @Entity
 @Table(name = "person")
 class Person {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private int id;
+    @NotBlank(message = "Persons name must not be empty")
     private String name;
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate dateOfBirth;
@@ -20,16 +21,24 @@ class Person {
     private boolean inRelation;
 
 
+//
+//    public Person(int id, String name, LocalDate dateOfBirth, double wages, boolean inRelation) {
+//        this.id = id;
+//        this.name = name;
+//        this.dateOfBirth = dateOfBirth;
+//        this.wages = wages;
+//        this.inRelation = inRelation;
+//    }
 
-    UUID getId() {
+    public int getId() {
         return id;
     }
 
-    void setId(UUID id) {
+    void setId(int id) {
         this.id = id;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -37,11 +46,11 @@ class Person {
         this.name = name;
     }
 
-    int getAge(){
+    public int getAge(){
         return java.time.LocalDate.now().getYear() - dateOfBirth.getYear();
     }
 
-    LocalDate getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
@@ -49,7 +58,7 @@ class Person {
         this.dateOfBirth = dateOfBirth;
     }
 
-    double getWages() {
+    public double getWages() {
         return wages;
     }
 
@@ -57,7 +66,7 @@ class Person {
         this.wages = wages;
     }
 
-    boolean isInRelation() {
+    public boolean isInRelation() {
         return inRelation;
     }
 
