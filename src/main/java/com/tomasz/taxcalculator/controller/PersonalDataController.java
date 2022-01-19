@@ -32,8 +32,8 @@ class PersonalDataController {
         }
 
         logger.info("Updating "+toUpdate.getName()+"s data");
-        repository.save(toUpdate);
         toUpdate.setId(id);
+        repository.save(toUpdate);
         return ResponseEntity.noContent().build();
             /*
             Na chwilę obecną jest pewien błąd w tej metodzie.
