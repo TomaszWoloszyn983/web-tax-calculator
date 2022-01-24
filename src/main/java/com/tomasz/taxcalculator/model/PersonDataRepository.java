@@ -22,7 +22,7 @@ public interface PersonDataRepository {
     boolean existsByName(String name);
 
     @RestResource(path = "inRelation", rel = "inRelation")
-    List<Person> findByInRelation(@Param("state") boolean inRelation);
+    List<Person> findByInRelation(boolean inRelation);
 
     @RestResource(path = "name", rel = "name")
     List<Person> findByName(@Param("name") String name);

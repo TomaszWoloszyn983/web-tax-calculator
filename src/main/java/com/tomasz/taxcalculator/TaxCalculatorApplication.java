@@ -47,3 +47,23 @@ Aby dostać się do bazy z konsoli, po przeniesieniu bazy danych do pliku trzeba
 który pojawia się w logach po odpalieniu apki i zapisać go mniej więcej w ten sposób jdbc:h2:file:./person-db
 oraz usunąc nazwę urzytownika oraz hasło.
  */
+
+/*
+Podmienilismy plik application.propoerties na application.yml, który to format oferuje bardziej
+elastyczne i czytelne podejsćie do zapisywania włąściwości. W lekcji zostało to zrobione poprzez
+refaktoryzację, mi to jednak nie działało dobrze dlatego utworzyłem zupełnie nowy plik yml i wkleiłem
+do niego kodd ze starego pliku.
+DOdatkowo zniknęła mi cała tabela PERSON  z bazy danych (zapewne dlatego ze miałem nie wiem skąd zapis
+ddl-auto: drop). Po zamienieniu go na dll-auto: update tabela się znowu poajwiła
+ */
+
+/*
+Dalszy ciąg zmadania sie z tymi bazami danych.
+Dodaliśmy zalezność flyway. Aby dziłała trzeba dodać nowy folder db/migration i utworzyć jakąś mogrację.
+Miałem z tym jakieś problemy, ale ogólnie utworzone za pomocą migracji flyway tabele można odczytywać też
+za pomoca konsoli H2, tylko trzeba uważać bo ja dodałem nową rubrykę inRelatio typu bit i poajwiły mi się
+dwie rubryki inRelation. Jeden to chyba boolean z klasy Person, drugi to bit z flywaya.
+Ogólnie zmienianie czegokolwiek w migracjach powinno odbywwać się poprzez trorzenie nowych migracji
+zamiast, bo grzebanie i zmienianie może powodowac że nie będzie zgadzałą się flywayowi checksuma i się
+wywali.
+ */
