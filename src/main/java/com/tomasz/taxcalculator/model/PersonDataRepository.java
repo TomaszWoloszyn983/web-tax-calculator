@@ -21,6 +21,8 @@ public interface PersonDataRepository {
 
     boolean existsByName(String name);
 
+
+
     @RestResource(path = "inRelation", rel = "inRelation")
     List<Person> findByInRelation(boolean inRelation);
 

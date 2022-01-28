@@ -63,6 +63,44 @@ class PersonalDataController {
         return ResponseEntity.ok(repository.findById(id));
     }
 
+    /**
+     * Modified version of the Patch method which saves the previous values of the variables if a new
+     * value is not given.
+     *
+     * @param id
+     * @param toUpdate
+     * @return
+     */
+    @PatchMapping("/people/{id}")
+    ResponseEntity<?> updatePerson(@PathVariable int id, @RequestBody @Valid Person toUpdate){
+        if(!repository.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
+
+//        Person temp = repository.findById(id).get();
+
+//        if(toUpdate.getDateOfBirth()!=null){
+//            temp.setDateOfBirth(toUpdate.getDateOfBirth());
+//        }
+//        if(toUpdate.getWages()!=0){
+//            temp.setWages(toUpdate.getWages());
+//        }
+//        if(toUpdate.getDateOfBirth()!=null){
+//            temp.setDateOfBirth(toUpdate.getDateOfBirth());
+//        }
+//        temp.setId(id);
+//        repository.save(temp);
+
+        repository.findById(id).
+                ifPresent(person -> {
+                            person.updateFrom(toUpdate);
+                            repository.save(person);
+                        });
+
+
+        return ResponseEntity.noContent().build();
+    }
+
 //    @GetMapping("/people")
 //    ResponseEntity<?> readPeopleList(Pageable page){
 //        logger.warn("Displaying people list!");

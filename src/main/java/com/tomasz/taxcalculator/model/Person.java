@@ -19,8 +19,10 @@ public class Person {
     private LocalDate dateOfBirth;
     private double wages;
     private boolean inRelation;
+    private String surname;
 
 
+    Person(){}
 //
 //    public Person(int id, String name, LocalDate dateOfBirth, double wages, boolean inRelation) {
 //        this.id = id;
@@ -47,14 +49,17 @@ public class Person {
     }
 
     public int getAge(){
-        return java.time.LocalDate.now().getYear() - dateOfBirth.getYear();
+        if(dateOfBirth!=null) {
+            return java.time.LocalDate.now().getYear() - dateOfBirth.getYear();
+        }
+        return 0;
     }
 
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -62,7 +67,7 @@ public class Person {
         return wages;
     }
 
-    void setWages(double wages) {
+    public void setWages(double wages) {
         this.wages = wages;
     }
 
@@ -70,9 +75,55 @@ public class Person {
         return inRelation;
     }
 
-    void setInRelation(boolean inRelation) {
+    public void setInRelation(boolean inRelation) {
         this.inRelation = inRelation;
     }
 
+    public String getSurname() {
+        return surname;
+    }
 
+    void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    /*
+    Czy to wszystko poniżej będzie potrzebne, okaże się później
+    na chwilę obecna wydaje mi się że to będzie do usunięcia.
+
+    Chociaż metoda toUpdate może być zastosowana w mojej metodzie
+    Patch/update. Zamiast tworzyć to co tam mam można podstawić to do
+    tutejszej metody.
+    Więcej na ten temat znajdę w lekcji 70
+
+    Dodoatkowo można dodać do maszych osób date utowrzenia zapisu oraz
+    datę update'a.
+     */
+    public void updateFrom(final Person source){
+        if(source.getDateOfBirth()!=null){
+            this.setDateOfBirth(source.getDateOfBirth());
+        }
+        if(source.getWages()!=0){
+            this.setWages(source.getWages());
+        }
+        if(source.getDateOfBirth()!=null){
+            this.setDateOfBirth(source.getDateOfBirth());
+        }
+        if(source.getSurname()!=null){
+            this.setSurname(source.getSurname());
+        }
+        if(source.isInRelation()!=false){
+            this.setInRelation(source.isInRelation());
+        }
+//        name = source.getName();
+//        dateOfBirth = source.getDateOfBirth();
+//        wages = source.getWages();
+//        inRelation = source.isInRelation();
+//        surname = source.getSurname();
+    }
+
+    @PreUpdate
+    void preMerge(){
+
+    }
 }
