@@ -1,7 +1,6 @@
 package com.tomasz.taxcalculator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
@@ -20,6 +19,8 @@ public class Person {
     private double wages;
     private boolean inRelation;
     private String surname;
+    private LocalDate createdOn;
+    private LocalDate updatedOn;
 
 
     Person(){}
@@ -87,17 +88,10 @@ public class Person {
         this.surname = surname;
     }
 
-    /*
-    Czy to wszystko poniżej będzie potrzebne, okaże się później
-    na chwilę obecna wydaje mi się że to będzie do usunięcia.
-
-    Chociaż metoda toUpdate może być zastosowana w mojej metodzie
-    Patch/update. Zamiast tworzyć to co tam mam można podstawić to do
-    tutejszej metody.
-    Więcej na ten temat znajdę w lekcji 70
-
-    Dodoatkowo można dodać do maszych osób date utowrzenia zapisu oraz
-    datę update'a.
+    /**
+     * Modified version of the Patch method which overwrites data with new values.
+     * Saves the previous values of the variables if a new value was not given.
+     * @param source
      */
     public void updateFrom(final Person source){
         if(source.getDateOfBirth()!=null){
@@ -122,8 +116,20 @@ public class Person {
 //        surname = source.getSurname();
     }
 
+    /**
+     * prePersist adds the date when our object was created and
+     * writen in our database.
+     */
+    @PrePersist
+    void prePersist(){
+        createdOn = LocalDate.now();
+    }
+
+    /**
+     * preMerge initailizes the date when our object was updated.
+     */
     @PreUpdate
     void preMerge(){
-
+        updatedOn = LocalDate.now();
     }
 }

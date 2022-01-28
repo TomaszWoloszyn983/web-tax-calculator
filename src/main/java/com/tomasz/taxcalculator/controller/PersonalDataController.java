@@ -35,16 +35,6 @@ class PersonalDataController {
         toUpdate.setId(id);
         repository.save(toUpdate);
         return ResponseEntity.noContent().build();
-            /*
-            Na chwilę obecną jest pewien błąd w tej metodzie.
-            Korzysta ona z metody save() i powoduje to że poprzez
-            updatowania niestniejącego elementu o jakimś wymyślonym
-            id taki element zostaje utworzony.
-
-            Zapobiegliśmy powyższemu poprzez dodanie if'a oraz
-            poprzez pobranie id'ka z updatowanego elementu(pathVariable).
-            Dodaliśmy także upadte id'ka na ten pobrany z adresu.
-             */
     }
 
     @PostMapping("/people")
@@ -77,33 +67,12 @@ class PersonalDataController {
             return ResponseEntity.notFound().build();
         }
 
-//        Person temp = repository.findById(id).get();
-
-//        if(toUpdate.getDateOfBirth()!=null){
-//            temp.setDateOfBirth(toUpdate.getDateOfBirth());
-//        }
-//        if(toUpdate.getWages()!=0){
-//            temp.setWages(toUpdate.getWages());
-//        }
-//        if(toUpdate.getDateOfBirth()!=null){
-//            temp.setDateOfBirth(toUpdate.getDateOfBirth());
-//        }
-//        temp.setId(id);
-//        repository.save(temp);
-
         repository.findById(id).
                 ifPresent(person -> {
                             person.updateFrom(toUpdate);
                             repository.save(person);
                         });
-
-
+        logger.info("Updating "+repository.findById(id).get().getName()+"s data");
         return ResponseEntity.noContent().build();
     }
-
-//    @GetMapping("/people")
-//    ResponseEntity<?> readPeopleList(Pageable page){
-//        logger.warn("Displaying people list!");
-//        return ResponseEntity.ok(repository.findAll());
-//    }
 }
