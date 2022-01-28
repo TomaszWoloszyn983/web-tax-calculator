@@ -19,8 +19,10 @@ public class Person {
     private double wages;
     private boolean inRelation;
     private String surname;
-    private LocalDate createdOn;
-    private LocalDate updatedOn;
+    @Embedded
+    private Audit audit = new Audit();
+
+
 
 
     Person(){}
@@ -109,27 +111,7 @@ public class Person {
         if(source.isInRelation()!=false){
             this.setInRelation(source.isInRelation());
         }
-//        name = source.getName();
-//        dateOfBirth = source.getDateOfBirth();
-//        wages = source.getWages();
-//        inRelation = source.isInRelation();
-//        surname = source.getSurname();
     }
 
-    /**
-     * prePersist adds the date when our object was created and
-     * writen in our database.
-     */
-    @PrePersist
-    void prePersist(){
-        createdOn = LocalDate.now();
-    }
 
-    /**
-     * preMerge initailizes the date when our object was updated.
-     */
-    @PreUpdate
-    void preMerge(){
-        updatedOn = LocalDate.now();
-    }
 }

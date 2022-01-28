@@ -72,7 +72,7 @@ class PersonalDataController {
                             person.updateFrom(toUpdate);
                             repository.save(person);
                         });
-        logger.info("Updating "+repository.findById(id).get().getName()+"s data");
+        logger.info("Updating "+repository.findById(id).get().getName()+"'s data");
         return ResponseEntity.noContent().build();
     }
 }
