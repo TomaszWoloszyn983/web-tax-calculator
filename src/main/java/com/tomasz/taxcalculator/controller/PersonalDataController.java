@@ -3,6 +3,7 @@ package com.tomasz.taxcalculator.controller;
 
 import com.tomasz.taxcalculator.model.Person;
 import com.tomasz.taxcalculator.model.PersonDataRepository;
+import com.tomasz.taxcalculator.service.Calculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,11 @@ import javax.validation.Valid;
 class PersonalDataController {
     private static final Logger logger = LoggerFactory.getLogger(PersonalDataController.class);
     private final PersonDataRepository repository;
+    private final Calculator calculator;
 
-    PersonalDataController(final PersonDataRepository repository) {
+    PersonalDataController(final PersonDataRepository repository, Calculator calculator) {
         this.repository = repository;
+        this.calculator = calculator;
     }
 
     @GetMapping(value = "/people", params = {"!sort", "!page", "!size"})
@@ -50,6 +53,21 @@ class PersonalDataController {
 
     @GetMapping("/people/{id}")
     ResponseEntity<?> readPerson(@PathVariable int id){
+        return ResponseEntity.ok(repository.findById(id));
+    }
+
+    /**
+     * The method calculates tax, tax credit and PRSI for a person taken from repository
+     * by id.
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/people/{id}/calculator")
+    ResponseEntity<?> readPersonsTax(@PathVariable int id){
+        calculator.generateTax(repository.findById(id).get());
+        logger.info(repository.findById(id).get().getName()+"s tax was generated: "
+                +calculator.toString());
         return ResponseEntity.ok(repository.findById(id));
     }
 

@@ -67,3 +67,29 @@ Ogólnie zmienianie czegokolwiek w migracjach powinno odbywwać się poprzez tro
 zamiast, bo grzebanie i zmienianie może powodowac że nie będzie zgadzałą się flywayowi checksuma i się
 wywali.
  */
+
+/*
+Dodoaliśmy parę zmiennych do klasy Person (createdOn, updatedOn) aby przechowywac dodatkowe
+informacje o dodaniu i zupdateowaniu jakiegoś profilu.
+Wydrębnilismy te dwie zmienne do oddzielnej klasy Audit, dzięki temu mamy mniej
+bałąganu w klasie Person i jednoczesnie to jedna klasa Audit będzie zaimowała sie
+rzeczami związanymi z audytem.
+Klasę Audit oznacznyliśmy adnotacją Embedable oraz za pomoca adnotacji @Embedded
+zprawiliśmy że będzie automatycznie wczytywana przez klase Person.
+Dodatkowo za pomoca @AttributeOverrides({
+										 @AttributeOverride(column = @Column(name = "createdOn",
+										 									name = "updatedOn")
+										)
+możemy uzyskać dostep do pojedyńczych zmiennych znajdujących sie w innej klasie i będacych oznaczone jako
+@Embedded.
+ */
+
+/*
+Hybernate umozliwia zarządznie relacyjnymi bazami danych z poziomu aplikacji. Przykład tego mieliśmy z aplikacji
+z kursu gdzie nasze taski były przypisywane do konkretnych grup zadań.
+Więcej na ten temat znajdziemy w 74 lekcji z kursu.
+Takie relacje między tabelami mogą mieć wiele zastosowań jak na przykład w przypadku
+gdy mamy jakieś produkty w sklepie, które chcemy podrupowac na kategorie, czy pracownicy w firmie,
+których możemy chcieć pogrupować według działów na których pracują wraz z mozliwościa dodawania
+kolejnych działow lub zamykania ich gdy sa puste itp.
+ */
