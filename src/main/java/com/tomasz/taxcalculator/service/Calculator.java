@@ -10,9 +10,9 @@ public class Calculator {
 
     DecimalFormat df = new DecimalFormat("####0.00");
     Person person;
-    private double income;
+    private double incomeValue;
     private double tax;
-    double taxCredit;
+    private double taxCredit;
     private double USC;
     private double prsi;
     private double prsiRate = 0.04; //double type equivalent of 4%
@@ -25,13 +25,18 @@ public class Calculator {
 
     public double generateTax(Person newPerson){
         this.person = newPerson;
-        this.income = newPerson.getWages();
-        this.tax = income*0.2;
+        this.incomeValue = newPerson.getWages();
+        this.tax = incomeValue *0.2;
         this.taxCredit = generateTaxCredit(person.isInRelation());
         this.USC = generateUSC(person.getWages());
-        this.prsi = generatePrsi();
+        this.prsi = generatePrsi(person.getWages());
 
-        double result = tax - taxCredit + prsi + USC;
+        /*
+        Still there is a mistate in this calculation.
+        TaxCredit should be subtracted only from tax,
+        not from the general result;
+         */
+        double result = (tax - taxCredit) + prsi + USC;
 
         if(result>0){
             return result;
@@ -63,7 +68,8 @@ public class Calculator {
         else
             result += 1700; //Single person Tax Credit
 
-        return result/ weeksPerYear;
+//        System.out.println("result / weekPerYear  = "+ result/weeksPerYear);
+        return Math.round((result/weeksPerYear)*100.0)/100.0;
     }
 
 
@@ -73,34 +79,34 @@ public class Calculator {
     The basic PRSI charge is 4% of €377 = €15.08.
     You will pay €7.25 PRSI weekly (€15.08 minus your €7.83 PRSI credit).
      */
-    double generatePrsi() {
-        try {
-            double prsi;
+    double generatePrsi(double incomeValue) {
 
-            if (income > 352) {
-                double credit = (income-352)/6;
-                if(credit>12){
-                    credit = 12;
-                }else{
-                    credit = 12-credit;
-                };
+        double prsi;
 
-                double charge = income*prsiRate;
-                prsi = charge - credit;
-            } else
-                prsi = 0;
+        if (incomeValue > 352) {
+            double credit = (incomeValue - 352)/6;
+            if(credit>12){
+                credit = 12;
+            }else{
+                credit = 12-credit;
+            };
 
-            return prsi;
+            double charge = incomeValue * prsiRate;
+            prsi = charge - credit;
+        } else
+            prsi = 0;
 
-        }catch(NullPointerException e){
-            System.out.println("Something went wrong! " +
-                    "Propably the income variable hasn't been initialized.");
-            e.printStackTrace();
-        }
-        return 0;
+        return Math.round(prsi*100.0)/100.0;
     }
 
-
+    /**
+     * This generator is very cintractual and not accurate.
+     * It bases on annual income calculated from the weekly income
+     * multiplyed by the number of week per year which corresponds
+     * with the reality only in cases when we have stable weekly wages.
+     * @param income
+     * @return
+     */
     double generateUSC(double income){
         double result = 0;
         double annualIncome = income*weeksPerYear;
@@ -116,11 +122,17 @@ public class Calculator {
         if(49357<annualIncome){
             result += 49357*0.045;
             annualIncome-=49357;
+
+            /*
+            If the amount is still higher than 0
+            then:
+             */
+            if(0<annualIncome){
+                result += annualIncome*0.08;
+            }
         }
-        if(0<annualIncome){
-            result += annualIncome*0.08;
-        }
-        return result/weeksPerYear;
+
+        return Math.round(result/weeksPerYear*100.0)/100.0;
     }
 
 
@@ -132,8 +144,8 @@ public class Calculator {
     }
 
 
-    public void setIncome(double income){
-        this.income = income;
+    public void setIncomeValue(double incomeValue){
+        this.incomeValue = incomeValue;
     }
     public void setWeeksPerYear(int newNumber){
         weeksPerYear = newNumber;
@@ -146,7 +158,7 @@ public class Calculator {
     public String toString() {
         return "Calculator{" +
                 "\n    income tax = " + df.format(getTax()) +
-                "\n    prsi = " + df.format(generatePrsi()) +
+                "\n    prsi = " + df.format(generatePrsi(person.getWages())) +
                 "\n    USC = " + df.format(getUSC()) +
                 "\n    taxCredit = " + df.format(taxCredit) +
                 "\n    final tax = " + df.format(generateTax(person));
